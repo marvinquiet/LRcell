@@ -12,7 +12,7 @@
 #' @source \url{http://dropviz.org/} under tab `data`
 "mouse_celltypes"
 
-#' Example gene_pvals named vector
+#' Example gene_pvals named vector from mouse experiment.
 #'
 #' A named vector containing gene symbols as name and p-values as values. This
 #' is from a mouse Alzheimer's disease model (GEO: GSE90693), specifically 6
@@ -24,19 +24,9 @@
 #' `GSE90693_RawCountsData_TPR50_6months_AllRegions.txt.gz`
 "example_gene_pvals"
 
-#' Mouse/Human marker genes provided by package.
+#' Mouse/Human marker genes provided by package under `inst/extdata`
 #'
 #' A list containing gene uniqueness score for each cell type or cluster.
 #'
 #' @format A list {celtype: gene scores}
 #' @source \url{http://dropviz.org/} under tab `data`
-"inst/extdata/mouse/THenriched_genes"
-"inst/extdata/mouse/FCenriched_genes"
-"inst/extdata/mouse/STRenriched_genes"
-"inst/extdata/mouse/SNenriched_genes"
-"inst/extdata/mouse/PCenriched_genes"
-"inst/extdata/mouse/HCenriched_genes"
-"inst/extdata/mouse/GPenriched_genes"
-"inst/extdata/mouse/ENTenriched_genes"
-"inst/extdata/mouse/CBenriched_genes"
-"inst/extdata/human/pFCenriched_genes"

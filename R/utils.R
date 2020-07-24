@@ -39,3 +39,40 @@ get_markergenes <- function(enriched_genes, method=c("LR", "LiR"), topn=100) {
     }
     marker_genes
 }
+
+
+#' Curate cluster name according to mouse cell types
+rename_clusters <- function(enriched_genes) {
+  data(mouse_celltypes)
+  clusters <- colnames(enriched_genes)
+  clusters <- gsub('\\.', '-', clusters)
+  celltypes_num <- table(mouse_celltypes[clusters])
+  celltypes_cnt <- rep(1, length(celltypes_num))
+  names(celltypes_cnt) <- names(celltypes_num)
+
+  new_clusternames <- rep(NA, length(clusters))
+  for (i in 1:length(clusters)) {
+    cluster <- clusters[i]
+    celltype <- unname(mouse_celltypes[cluster])
+    new_clusternames[i] <- paste(cluster,
+                                 paste(celltype, unname(celltypes_cnt[celltype]), sep='_'),
+                                 sep=".")
+    celltypes_cnt[celltype] <- celltypes_cnt[celltype]+1
+  }
+
+  new_enriched_genes <- enriched_genes
+  colnames(new_enriched_genes) <- new_clusternames
+  new_enriched_genes
+}
+
+#' Change the cluster number into corresponding sub-cell types
+rename_by_extdata <- function() {
+  files <- list.files(system.file("extdata", "mouse_bak", package = "LRcell"), full.names = T)
+
+  new_mouse_dir <- system.file("extdata", "new_mouse", package = "LRcell")
+  for (enriched_file in files) {
+    enriched_genes <- readRDS(enriched_file)
+    new_enriched_genes <- rename_clusters(enriched_genes)
+    saveRDS(new_enriched_genes, file=file.path(new_mouse_dir, basename(enriched_file)))
+  }
+}

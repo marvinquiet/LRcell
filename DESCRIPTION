@@ -1,10 +1,11 @@
 Package: LRcell
 Type: Package
 Title: Find transcriptomicly active cell types by Logistic Regression
-Version: 0.1.0
+Version: 1.0.0
 Author: Wenjing Ma
 Maintainer: Wenjing Ma <wenjing.ma@emory.edu>
 BugReports: https://github.com/marvinquiet/LRcell/issues
+GitURL: https://github.com/marvinquiet/LRcell
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
@@ -14,7 +15,9 @@ Depends:
     R (>= 2.10)
 Imports:
     stats,
-    ggplot2
+    ggplot2,
+    ggrepel,
+    dplyr
 RoxygenNote: 7.1.1
 Suggests: 
     testthat

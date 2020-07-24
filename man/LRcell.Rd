@@ -2,14 +2,16 @@
 % Please edit documentation in R/LRcell.R
 \name{LRcell}
 \alias{LRcell}
-\title{Find transcriptomicly active cell types by Logistic Regression}
+\title{Wrapper function to run LRcell for preranked gene set.}
 \usage{
 LRcell(
   gene_pvals,
   sc_marker_genes = NULL,
+  sig_cutoff = 0.05,
   species = c("mouse", "human"),
   region = NULL,
   method = c("LR", "LiR"),
+  min_size = 1,
   plot = FALSE
 )
 }
@@ -24,26 +26,32 @@ marker genes list in different human/mouse brains, but users could use their
 own marker gene list as input.
 default: NULL}
 
-\item{species}{Either `mouse` or `human`, default: mouse}
+\item{sig_cutoff}{Cutoff for input genes' pvalues, default: 0.05.}
+
+\item{species}{Either `mouse` or `human`, default: mouse.}
 
 \item{region}{Specific brain regions provided by LRcell. For mouse, LRcell
-provides 9 brain regions according to Saunders et al. (Cell 2018) including:
-Frontal Cortex, Posterior Cortex, Hippocampus, etc. For human, LRcell
-provides pre-frontal cortex (Nagy et al., Nature Neuroscience 2020)}
+provides 9 brain regions: c("FC", "HC", "PC", "GP", "STR", "TH", "SN", "ENT",
+"CB"). For human, LRcell provides c("pFC")}
 
 \item{method}{Either `logistic regression` or `linear regression`. Logistic
 regression equally treats cell-type specific marker genes, however, if
 certain values could determine the importance of marker genes, linear
-regression can be performed.}
+regression can be performed, default: LR.}
 
-\item{plot}{For Manhattan and Enrichment plot generation}
+\item{min_size}{Minimal size of a marker gene set, will impact the balance of
+labels}
+
+\item{plot}{Whether to generate the plot.}
 }
 \value{
 LRcell statistics.
 }
 \description{
-This is a function which takes marker genes from single-cell RNA-seq as
-reference to calculate the enrichment of certain cell types in bulk DEG
-analysis. We assume that bulk DEG is derived from certain cell-type specific
-pattern.
+This function wraps around \link[LRcell]{LRcell_analysis} in case of empty
+inputs of the marker gene file and brain region.
+}
+\examples{
+data(example_gene_pvals)
+res <- LRcell(example_gene_pvals, region="FC")
 }
