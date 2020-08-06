@@ -3,7 +3,7 @@
 \docType{data}
 \name{MOUSE_REGIONS}
 \alias{MOUSE_REGIONS}
-\title{mouse brain regions}
+\title{mouse/human brain regions provided by LRcell package}
 \format{
 An object of class \code{character} of length 9.
 }
@@ -11,6 +11,6 @@ An object of class \code{character} of length 9.
 MOUSE_REGIONS
 }
 \description{
-mouse brain regions
+mouse/human brain regions provided by LRcell package
 }
 \keyword{datasets}

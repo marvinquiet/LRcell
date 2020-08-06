@@ -14,10 +14,17 @@ LazyData: true
 Depends:
     R (>= 2.10)
 Imports:
-    stats,
+    doParallel,
+    dplyr,
+    fgsea,
+    foreach,
     ggplot2,
     ggrepel,
-    dplyr
+    stats
 RoxygenNote: 7.1.1
-Suggests: 
-    testthat
+Suggests:
+    roxygen2,
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

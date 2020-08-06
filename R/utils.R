@@ -1,4 +1,4 @@
-#' mouse brain regions
+#' mouse/human brain regions provided by LRcell package
 MOUSE_REGIONS <- c("TH", "STR", "SN", "PC", "HC", "GP", "FC", "ENT", "CB")
 HUMAN_REGIONS <- c("pFC")
 
@@ -22,13 +22,25 @@ validate_region <- function(species, region) {
 }
 
 #' Get top marker genes for each subcluster
-get_markergenes <- function(enriched_genes, method=c("LR", "LiR"), topn=100) {
+#'
+#' @name get_markergenes
+#' @usage get_markergenes(enriched.g, method="LR")
+#'
+#' @param enriched.g A return from \link[LRcell]{LRcell_gene_enriched_scores}
+#' or from provided data
+#'
+#' @param method If LR, the return will be a list of genes; If LiR, the return
+#' will be a list of named vector with names as genes and values as enriched
+#' scores.
+#' @param topn Top N genes as marker genes.
+#' @export
+get_markergenes <- function(enriched.g, method=c("LR", "LiR"), topn=100) {
     method <- match.arg(method)
 
     marker_genes<- list()
-    for (cluster in colnames(enriched_genes)) {
-        enriched_values <- as.numeric(enriched_genes[, cluster])
-        names(enriched_values) <- rownames(enriched_genes)
+    for (cluster in colnames(enriched.g)) {
+        enriched_values <- as.numeric(enriched.g[, cluster])
+        names(enriched_values) <- rownames(enriched.g)
         sorted_enriched_genes <- sort(enriched_values, decreasing = TRUE)
 
         # For current version, we use an arbitrary number of genes for each cluster
@@ -41,6 +53,7 @@ get_markergenes <- function(enriched_genes, method=c("LR", "LiR"), topn=100) {
 }
 
 
+# === only for curating cell types for provided data
 #' Curate cluster name according to mouse cell types
 rename_clusters <- function(enriched_genes) {
   data(mouse_celltypes)

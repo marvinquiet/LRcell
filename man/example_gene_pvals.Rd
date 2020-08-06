@@ -5,7 +5,7 @@
 \alias{example_gene_pvals}
 \title{Example gene_pvals named vector from mouse experiment.}
 \format{
-A named vector
+A named vector with 23,420 items
 }
 \source{
 \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90693}

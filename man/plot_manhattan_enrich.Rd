@@ -4,13 +4,13 @@
 \alias{plot_manhattan_enrich}
 \title{Manhattan plot for the enrichment of cell types}
 \usage{
-plot_manhattan_enrich(lrcell_res, sig_cutoff = 0.05, label_topn = 5)
+plot_manhattan_enrich(lrcell_res)
 }
 \arguments{
 \item{lrcell_res}{LRcell result dataframe}
 }
 \value{
-a ggplot2 object
+A ggplot2 object
 }
 \description{
 This function draws out the LRcell result dataframe. In this function, we take

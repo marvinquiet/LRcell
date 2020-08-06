@@ -6,6 +6,15 @@
 \usage{
 plot_gsea_enrich(gene_pvals, sc_marker_genes)
 }
+\arguments{
+\item{gene.p}{Gene pvalues}
+
+\item{marker.g}{}
+}
+\value{
+A ggplot2 object
+}
 \description{
-GSEA enrichment plot for the enrichment of different cell types
+This function draws out the LRcell result dataframe. In this function, we take
+LRcell result dataframe and added cell types according to
 }

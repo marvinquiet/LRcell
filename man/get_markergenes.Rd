@@ -4,7 +4,17 @@
 \alias{get_markergenes}
 \title{Get top marker genes for each subcluster}
 \usage{
-get_markergenes(enriched_genes, method = c("LR", "LiR"), topn = 100)
+get_markergenes(enriched.g, method="LR")
+}
+\arguments{
+\item{enriched.g}{A return from \link[LRcell]{LRcell_gene_enriched_scores}
+or from provided data}
+
+\item{method}{If LR, the return will be a list of genes; If LiR, the return
+will be a list of named vector with names as genes and values as enriched
+scores.}
+
+\item{topn}{Top N genes as marker genes.}
 }
 \description{
 Get top marker genes for each subcluster
