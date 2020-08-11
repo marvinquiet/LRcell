@@ -7,7 +7,8 @@
 LRcell_gene_enriched_scores(expr, annot, power=1)
 }
 \arguments{
-\item{expr}{Expression dataframe with rows as genes and columns as cells.}
+\item{expr}{Expression matrix with rows as genes and columns as cells, can be
+an object of Matrix or dgCMatrix or a dataframe.}
 
 \item{annot}{Cell type annotation named vector with names as cell ids and
 values as cell types.}

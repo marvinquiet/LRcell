@@ -262,7 +262,8 @@ LRcellCore <- function(gene.p,
 #' @name LRcell_gene_enriched_scores
 #' @usage LRcell_gene_enriched_scores(expr, annot, power=1)
 #'
-#' @param expr Expression dataframe with rows as genes and columns as cells.
+#' @param expr Expression matrix with rows as genes and columns as cells, can be
+#' an object of Matrix or dgCMatrix or a dataframe.
 #'
 #' @param annot Cell type annotation named vector with names as cell ids and
 #' values as cell types.
@@ -274,8 +275,9 @@ LRcellCore <- function(gene.p,
 #' @return Enrichment dataframe with rows as genes and columns as cell types,
 #' values are enrichment scores.
 #'
-#' @import doParallel
+#' @import doSNOW
 #' @import foreach
+#'
 #'
 #' @export
 LRcell_gene_enriched_scores <- function(expr,
@@ -283,7 +285,7 @@ LRcell_gene_enriched_scores <- function(expr,
                                      power=1,
                                      parallel=TRUE,
                                      cores.n=NULL) {
-    cat("Generate enrichment score for each gene..")
+    cat("Generate enrichment score for each gene..\n")
     gene_enriched_list <- NULL
 
     # check length
@@ -293,23 +295,38 @@ LRcell_gene_enriched_scores <- function(expr,
     if(!all(sort(colnames(expr)) == sort(names(annot))))
         stop("Please check your provided cell type annotation is corresponding to the input expression dataframe.")
 
+    # progress bar
+    pb <- txtProgressBar(max=nrow(expr), style=3)
+    progress <- function(n) setTxtProgressBar(pb, n)
+
     # do parallel
     if (parallel) {
         dcores <- parallel::detectCores()
-        ncores <- ifelse(is.null(cores.n), parallel::detectCores(), as.numeric(cores.n))
-        doParallel::registerDoParallel(cores=ncores)
+        ncores <- ifelse(is.null(cores.n), dcores, as.numeric(cores.n))
 
-        gene_enriched_list <- foreach::foreach(gene=rownames(expr)) %dopar% {
+        cl <- parallel::makeCluster(ncores)
+        doSNOW::registerDoSNOW(cl)
+        opts <- list(progress=progress)
+
+        gene_enriched_list <- foreach::foreach(gene=rownames(expr),
+                                               .export = c("enrich_posfrac_score"),
+                                               .packages="Matrix",
+                                               .options.snow=opts) %dopar% {
             enrich_posfrac_score(expr[gene, ], annot, power=power)
         }
+        parallel::stopCluster(cl)
     } else {
-        for (gene in rownames(expr))
+        for (i in 1:nrow(expr)) {
+            gene <- rownames(expr)[i]
             gene_enriched_list[[gene]] <- enrich_posfrac_score(expr[gene, ], annot, power=power)
+            progress(i)
+        }
     }
+    close(pb)
 
     cat("total gene number:", length(gene_enriched_list), '\n')
-    names(gene_enriched_list) <- rownames(data)
     enriched_genes <- do.call(rbind, gene_enriched_list)
+    rownames(enriched_genes) <- rownames(expr)
     enriched_genes
 }
 
