@@ -1,18 +1,21 @@
 Package: LRcell
 Type: Package
-Title: Find transcriptomicly active cell types by Logistic Regression
+Title: Identification of cell-type enrichment in bulk RNA-seq datasets leveraging scRNA-seq marker genes information
 Version: 1.0.0
-Author: Wenjing Ma
+Date: 2020-08-08
+Author: Wenjing Ma [aut]
 Maintainer: Wenjing Ma <wenjing.ma@emory.edu>
 BugReports: https://github.com/marvinquiet/LRcell/issues
 GitURL: https://github.com/marvinquiet/LRcell
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: This package leverages marker genes information from single-cell 
+    RNA-sequencing (scRNA-seq) to infer cell-type specific enrichment from bulk 
+    RNA-seq datasets. The output statistics give users new insights of which 
+    cell type(s) may be highly involved in the bulk experiments without deconvolution.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 2.10)
+    R (>= 3.3)
 Imports:
     doSNOW,
     dplyr,
