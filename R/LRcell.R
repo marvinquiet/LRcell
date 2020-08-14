@@ -79,11 +79,22 @@ It might take some time...")
         # get the list of marker genes
         for (reg in regions) {
             reg <- validate_region(species, reg)
-            filepath <- system.file("extdata",
-                                    paste0(species, '/', reg, 'enriched_genes.RDS'),
-                                    package = "LRcell",
-                                    mustWork = TRUE)
-            enriched_genes <- readRDS(filepath)
+
+            marker_genes_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
+
+            # Github urls where enriched genes are stored
+            enriched_genes_url <- paste0(marker_genes_url,
+                                         paste0(species, '/', reg, 'enriched_genes.RDS'),
+                                         "?raw=true")
+
+            # mouse/CBenriched_genes.RDS?raw=true"
+
+            # filepath <- system.file("extdata",
+            #                         paste0(species, '/', reg, 'enriched_genes.RDS'),
+            #                         package = "LRcell",
+            #                         mustWork = TRUE)
+            # enriched_genes <- readRDS(filepath)
+            enriched_genes_url <- readRDS(url(enriched_genes_url))
             sc_marker_genes_list[[reg]] <- get_markergenes(enriched_genes, method)
         }
     } else {

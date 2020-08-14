@@ -3,3 +3,6 @@
 
 ^[.].*$
 ^.*/[.].*$
+
+# ignore marker genes library
+marker_genes_lib/
