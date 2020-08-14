@@ -73,7 +73,7 @@ rename_clusters <- function(enriched_genes) {
   names(celltypes_cnt) <- names(celltypes_num)
 
   new_clusternames <- rep(NA, length(clusters))
-  for (i in 1:length(clusters)) {
+  for (i in seq_len(length(clusters))) {
     cluster <- clusters[i]
     celltype <- unname(mouse_celltypes[cluster])
     new_clusternames[i] <- paste(cluster,
@@ -89,7 +89,7 @@ rename_clusters <- function(enriched_genes) {
 
 #' Change the cluster number into corresponding sub-cell types
 rename_by_extdata <- function() {
-  files <- list.files(system.file("extdata", "mouse_bak", package = "LRcell"), full.names = T)
+  files <- list.files(system.file("extdata", "mouse_bak", package = "LRcell"), full.names = TRUE)
 
   new_mouse_dir <- system.file("extdata", "new_mouse", package = "LRcell")
   for (enriched_file in files) {

@@ -28,7 +28,7 @@ test_that("LRcell enriched gene generation", {
     rownames(manual.enriched.df) <- rownames(sim.expr)
 
     # code result
-    code.enriched.df <- LRcell_gene_enriched_scores(sim.expr, sim.annot, parallel = F)
+    code.enriched.df <- LRcell_gene_enriched_scores(sim.expr, sim.annot, parallel = FALSE)
 
     expect_equal(manual.enriched.df['gene2', 'celltype2'],
                  unlist(code.enriched.df['gene2', 'celltype2']),

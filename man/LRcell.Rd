@@ -42,13 +42,15 @@ labels}
 \item{sig.cutoff}{Cutoff for input genes pvalues, default: 0.05.}
 }
 \value{
-A table with LRcell results statistics. Each row is the name of marker
-genes, and the columns are:
+A list with LRcell results. Each item represents a marker gene input.
+Each item in this list is a statistics table. In the table, the row
+represents the name of marker genes, and the columns are:
 \itemize{
  \item ID The IDs of each marker genes, can be a cell type or cluster;
  \item genes_num How many marker genes are contributing to the analysis;
  \item coef The coefficients of Logistic Regression or Linear Regression;
- \item odds_ratio The odds ratio quantifies association in Logistic Regression;
+ \item odds_ratio The odds ratio quantifies association in Logistic
+ Regression;
  \item p-value The p-value calculated from the analysis;
  \item FDR The FDR after BH correction.
  \item lead_genes Genes that are contributing to the analysis;
@@ -60,5 +62,5 @@ inputs of the marker gene file and brain region.
 }
 \examples{
 data(example_gene_pvals)
-res <- LRcell(example_gene_pvals, region="FC")
+res <- LRcell(example_gene_pvals, species="mouse", region="FC")
 }

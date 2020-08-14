@@ -14,6 +14,7 @@ Description: This package leverages marker genes information from single-cell
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+biocViews: SingleCell, GeneSetEnrichment, Sequencing, Regression
 Depends:
     R (>= 3.6)
 Imports:

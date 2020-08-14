@@ -30,13 +30,15 @@
 #'
 #' @param sig.cutoff Cutoff for input genes pvalues, default: 0.05.
 #'
-#' @return A table with LRcell results statistics. Each row is the name of marker
-#' genes, and the columns are:
+#' @return A list with LRcell results. Each item represents a marker gene input.
+#' Each item in this list is a statistics table. In the table, the row
+#' represents the name of marker genes, and the columns are:
 #'\itemize{
 #'  \item ID The IDs of each marker genes, can be a cell type or cluster;
 #'  \item genes_num How many marker genes are contributing to the analysis;
 #'  \item coef The coefficients of Logistic Regression or Linear Regression;
-#'  \item odds_ratio The odds ratio quantifies association in Logistic Regression;
+#'  \item odds_ratio The odds ratio quantifies association in Logistic
+#'  Regression;
 #'  \item p-value The p-value calculated from the analysis;
 #'  \item FDR The FDR after BH correction.
 #'  \item lead_genes Genes that are contributing to the analysis;
@@ -45,7 +47,7 @@
 #' @export
 #' @examples
 #' data(example_gene_pvals)
-#' res <- LRcell(example_gene_pvals, region="FC")
+#' res <- LRcell(example_gene_pvals, species="mouse", region="FC")
 LRcell <- function(gene.p,
                    marker.g = NULL,
                    species = c("mouse", "human"),
@@ -67,7 +69,8 @@ LRcell <- function(gene.p,
 
         # user does not provide region information
         if (is.null(region)) {
-            message("Because you did not choose a certain region, we will run all regions in this specie for you.
+            message("Because you did not choose a certain region, we will run all
+regions in this specie for you.
 It might take some time...")
             if (species == "mouse")
                 regions <- MOUSE_REGIONS
@@ -87,14 +90,13 @@ It might take some time...")
                                          paste0(species, '/', reg, 'enriched_genes.RDS'),
                                          "?raw=true")
 
-            # mouse/CBenriched_genes.RDS?raw=true"
-
+            #Remove later: not reading it from extdata anymore
             # filepath <- system.file("extdata",
             #                         paste0(species, '/', reg, 'enriched_genes.RDS'),
             #                         package = "LRcell",
             #                         mustWork = TRUE)
             # enriched_genes <- readRDS(filepath)
-            enriched_genes_url <- readRDS(url(enriched_genes_url))
+            enriched_genes <- readRDS(url(enriched_genes_url))
             sc_marker_genes_list[[reg]] <- get_markergenes(enriched_genes, method)
         }
     } else {
@@ -186,7 +188,7 @@ LRcellCore <- function(gene.p,
     sig_genes <- names(gene_nlp)[exp(-gene_nlp) < sig.cutoff]
 
     # filter single-cell marker gene list
-    filtered_marker_genes <- marker.g[sapply(marker.g, length) >= min.size]
+    filtered_marker_genes <- marker.g[lapply(marker.g, length) >= min.size]
 
     # start analyze
     ids <- NA; coefs <- NA; pvals <- NA; genes_num <- NA; lead_genes <- NA
@@ -262,9 +264,9 @@ LRcellCore <- function(gene.p,
     # LRcell uses ID as cell type
     if (package.d) {
         split_res <- strsplit(as.character(res$ID), "\\.")
-        celltypes <- sapply(split_res, "[", 2)
-        res$cell_type <- sapply(lapply(strsplit(as.character(celltypes), "_"), head, -1),
-                                       paste, collapse="_")
+        celltypes <- unlist(lapply(split_res, "[", 2))
+        res$cell_type <- unlist(lapply(lapply(strsplit(as.character(celltypes), "_"), head, -1),
+                                       paste, collapse="_"))
     } else {
         res$cell_type <- res$ID
     }
@@ -336,7 +338,7 @@ LRcell_gene_enriched_scores <- function(expr,
         }
         parallel::stopCluster(cl)
     } else {
-        for (i in 1:nrow(expr)) {
+        for (i in seq_len(nrow(expr))) {
             gene <- rownames(expr)[i]
             gene_enriched_list[[gene]] <- enrich_posfrac_score(expr[gene, ], annot, power=power)
             progress(i)
