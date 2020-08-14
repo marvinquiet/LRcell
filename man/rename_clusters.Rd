@@ -6,6 +6,9 @@
 \usage{
 rename_clusters(enriched_genes)
 }
+\arguments{
+\item{enriched_genes}{The provided enriched genes.}
+}
 \description{
 Curate cluster name according to mouse cell types
 }

@@ -4,10 +4,15 @@
 \alias{plot_manhattan_enrich}
 \title{Manhattan plot for the enrichment of cell types}
 \usage{
-plot_manhattan_enrich(lrcell_res)
+plot_manhattan_enrich(lrcell_res, sig.cutoff = 0.05, label.topn = 5)
 }
 \arguments{
-\item{lrcell_res}{LRcell result dataframe}
+\item{lrcell_res}{LRcell result dataframe.}
+
+\item{sig.cutoff}{The p-value cutoff showing significance result of LRcell.}
+
+\item{label.topn}{A numeric number showing how many significant cell types
+will be labeled.}
 }
 \value{
 A ggplot2 object

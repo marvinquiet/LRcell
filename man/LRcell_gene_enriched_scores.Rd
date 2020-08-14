@@ -4,7 +4,13 @@
 \alias{LRcell_gene_enriched_scores}
 \title{Find most enriched cell types in bulk DE genes by Logistic Regression}
 \usage{
-LRcell_gene_enriched_scores(expr, annot, power=1)
+LRcell_gene_enriched_scores(
+  expr,
+  annot,
+  power = 1,
+  parallel = TRUE,
+  cores.n = NULL
+)
 }
 \arguments{
 \item{expr}{Expression matrix with rows as genes and columns as cells, can be
@@ -12,6 +18,8 @@ an object of Matrix or dgCMatrix or a dataframe.}
 
 \item{annot}{Cell type annotation named vector with names as cell ids and
 values as cell types.}
+
+\item{power}{The penalty on fraction of cells expressing the genes.}
 
 \item{parallel}{Whether to run it in parallel.}
 
@@ -24,6 +32,5 @@ values are enrichment scores.
 \description{
 This is a function which takes marker genes from single-cell RNA-seq as
 reference to calculate the enrichment of certain cell types in bulk DEG
-analysis. We assume that bulk DEG is derived from certain cell-type specific
-pattern.
+analysis. This algorithm borrows from Marques et al, 2016 (https://science.sciencemag.org/content/352/6291/1326.long).
 }

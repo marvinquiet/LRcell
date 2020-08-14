@@ -3,17 +3,21 @@ MOUSE_REGIONS <- c("TH", "STR", "SN", "PC", "HC", "GP", "FC", "ENT", "CB")
 HUMAN_REGIONS <- c("pFC")
 
 #' Whether the input data is a named numeric vector
+#' @param data Input data.
 is_namedvector <- function(data) {
     is.vector(data) & is.numeric(data) & !is.null(names(data)) &
     !any(is.na(names(data)))
 }
 
 #' Whether the input data is a vector
+#' @param data Input data.
 is_vector <- function(data) {
     is.vector(data) & is.character(data) & is.null(names(data))
 }
 
 #' Whether the input region is valid
+#' @param species Input species.
+#' @param region Input region.
 validate_region <- function(species, region) {
     if (species == "mouse")
         return(match.arg(region, MOUSE_REGIONS))
@@ -24,7 +28,6 @@ validate_region <- function(species, region) {
 #' Get top marker genes for each subcluster
 #'
 #' @name get_markergenes
-#' @usage get_markergenes(enriched.g, method="LR")
 #'
 #' @param enriched.g A return from \link[LRcell]{LRcell_gene_enriched_scores}
 #' or from provided data
@@ -32,7 +35,11 @@ validate_region <- function(species, region) {
 #' @param method If LR, the return will be a list of genes; If LiR, the return
 #' will be a list of named vector with names as genes and values as enriched
 #' scores.
+#'
 #' @param topn Top N genes as marker genes.
+#'
+#' @import utils
+#'
 #' @export
 get_markergenes <- function(enriched.g, method=c("LR", "LiR"), topn=100) {
     method <- match.arg(method)
@@ -55,8 +62,10 @@ get_markergenes <- function(enriched.g, method=c("LR", "LiR"), topn=100) {
 
 # === only for curating cell types for provided data
 #' Curate cluster name according to mouse cell types
+#' @param enriched_genes The provided enriched genes.
 rename_clusters <- function(enriched_genes) {
-  data(mouse_celltypes)
+  mouse_celltypes <- LRcell::mouse_celltypes
+  # data(mouse_celltypes)
   clusters <- colnames(enriched_genes)
   clusters <- gsub('\\.', '-', clusters)
   celltypes_num <- table(mouse_celltypes[clusters])

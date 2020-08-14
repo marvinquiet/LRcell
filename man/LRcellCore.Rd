@@ -4,7 +4,14 @@
 \alias{LRcellCore}
 \title{Find most enriched cell types in bulk DE genes by Logistic Regression}
 \usage{
-LRcellCore(gene.p, marker.g, method)
+LRcellCore(
+  gene.p,
+  marker.g,
+  method,
+  min.size = 5,
+  sig.cutoff = 0.05,
+  package.d = FALSE
+)
 }
 \arguments{
 \item{gene.p}{Named vector of gene-level pvalues from DEG analysis, i.e.

@@ -6,6 +6,11 @@
 \usage{
 validate_region(species, region)
 }
+\arguments{
+\item{species}{Input species.}
+
+\item{region}{Input region.}
+}
 \description{
 Whether the input region is valid
 }

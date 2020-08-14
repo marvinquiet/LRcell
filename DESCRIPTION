@@ -15,7 +15,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 3.3)
+    R (>= 3.5.0)
 Imports:
     doSNOW,
     dplyr,
@@ -23,7 +23,9 @@ Imports:
     foreach,
     ggplot2,
     ggrepel,
-    stats
+    magrittr,
+    stats,
+    utils
 RoxygenNote: 7.1.1
 Suggests:
     roxygen2,

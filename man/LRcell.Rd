@@ -4,8 +4,15 @@
 \alias{LRcell}
 \title{Cell-type enrichment analysis for preranked gene set.}
 \usage{
-LRcell(gene.p, marker.g=NULL, species="mouse", region="FC", method="LR");
-LRcell(gene.p, marker.g, method="LR")
+LRcell(
+  gene.p,
+  marker.g = NULL,
+  species = c("mouse", "human"),
+  region = NULL,
+  method = c("LR", "LiR"),
+  min.size = 5,
+  sig.cutoff = 0.05
+)
 }
 \arguments{
 \item{gene.p}{Named vector of gene-level pvalues from DEG analysis, i.e.
@@ -35,7 +42,17 @@ labels}
 \item{sig.cutoff}{Cutoff for input genes pvalues, default: 0.05.}
 }
 \value{
-A list of LRcell statistics.
+A table with LRcell results statistics. Each row is the name of marker
+genes, and the columns are:
+\itemize{
+ \item ID The IDs of each marker genes, can be a cell type or cluster;
+ \item genes_num How many marker genes are contributing to the analysis;
+ \item coef The coefficients of Logistic Regression or Linear Regression;
+ \item odds_ratio The odds ratio quantifies association in Logistic Regression;
+ \item p-value The p-value calculated from the analysis;
+ \item FDR The FDR after BH correction.
+ \item lead_genes Genes that are contributing to the analysis;
+}
 }
 \description{
 This function wraps around \code{\link{LRcellCore}} in case of empty

@@ -6,6 +6,9 @@
 \usage{
 is_vector(data)
 }
+\arguments{
+\item{data}{Input data.}
+}
 \description{
 Whether the input data is a vector
 }

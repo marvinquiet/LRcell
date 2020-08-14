@@ -4,8 +4,6 @@
 #' inputs of the marker gene file and brain region.
 #'
 #' @name LRcell
-#' @usage LRcell(gene.p, marker.g=NULL, species="mouse", region="FC", method="LR");
-#' LRcell(gene.p, marker.g, method="LR")
 #' @param gene.p Named vector of gene-level pvalues from DEG analysis, i.e.
 #' DESeq2, LIMMA
 #'
@@ -32,7 +30,18 @@
 #'
 #' @param sig.cutoff Cutoff for input genes pvalues, default: 0.05.
 #'
-#' @return A list of LRcell statistics.
+#' @return A table with LRcell results statistics. Each row is the name of marker
+#' genes, and the columns are:
+#'\itemize{
+#'  \item ID The IDs of each marker genes, can be a cell type or cluster;
+#'  \item genes_num How many marker genes are contributing to the analysis;
+#'  \item coef The coefficients of Logistic Regression or Linear Regression;
+#'  \item odds_ratio The odds ratio quantifies association in Logistic Regression;
+#'  \item p-value The p-value calculated from the analysis;
+#'  \item FDR The FDR after BH correction.
+#'  \item lead_genes Genes that are contributing to the analysis;
+#'}
+#'
 #' @export
 #' @examples
 #' data(example_gene_pvals)
@@ -78,7 +87,7 @@ It might take some time...")
             sc_marker_genes_list[[reg]] <- get_markergenes(enriched_genes, method)
         }
     } else {
-        sc_marker_genes_list[["user"]] <- sc_marker_genes
+        sc_marker_genes_list[["user"]] <- marker.g
         internal_data_ind <- FALSE
     }
 
@@ -104,8 +113,7 @@ It might take some time...")
 #' pattern.
 #'
 #' @name LRcellCore
-#' @usage LRcellCore(gene.p, marker.g, method)
-
+#'
 #' @param gene.p Named vector of gene-level pvalues from DEG analysis, i.e.
 #' DESeq2, LIMMA
 #'
@@ -130,6 +138,7 @@ It might take some time...")
 #' run LRcell analysis.
 #'
 #' @import stats
+#' @import utils
 #'
 #' @export
 LRcellCore <- function(gene.p,
@@ -256,17 +265,17 @@ LRcellCore <- function(gene.p,
 #'
 #' This is a function which takes marker genes from single-cell RNA-seq as
 #' reference to calculate the enrichment of certain cell types in bulk DEG
-#' analysis. We assume that bulk DEG is derived from certain cell-type specific
-#' pattern.
+#' analysis. This algorithm borrows from Marques et al, 2016 (https://science.sciencemag.org/content/352/6291/1326.long).
 #'
 #' @name LRcell_gene_enriched_scores
-#' @usage LRcell_gene_enriched_scores(expr, annot, power=1)
 #'
 #' @param expr Expression matrix with rows as genes and columns as cells, can be
 #' an object of Matrix or dgCMatrix or a dataframe.
 #'
 #' @param annot Cell type annotation named vector with names as cell ids and
 #' values as cell types.
+#'
+#' @param power The penalty on fraction of cells expressing the genes.
 #'
 #' @param parallel Whether to run it in parallel.
 #'
@@ -296,8 +305,8 @@ LRcell_gene_enriched_scores <- function(expr,
         stop("Please check your provided cell type annotation is corresponding to the input expression dataframe.")
 
     # progress bar
-    pb <- txtProgressBar(max=nrow(expr), style=3)
-    progress <- function(n) setTxtProgressBar(pb, n)
+    pb <- utils::txtProgressBar(max=nrow(expr), style=3)
+    progress <- function(n) utils::setTxtProgressBar(pb, n)
 
     # do parallel
     if (parallel) {
@@ -337,12 +346,13 @@ LRcell_gene_enriched_scores <- function(expr,
 #' hyperparameter to calculate enrichment scores.
 #'
 #' @name enrich_posfrac_score
-#' @usage enrich_posfrac_score(gene_expr, annot, power=1)
 #'
 #' @param gene.expr A vector represents expression level for a specific gene.
 #'
 #' @param annot Cell type annotation named vector with names as cell ids and
 #' values as cell types.
+#'
+#' @param power The penalty on fraction of cells expressing the genes
 #'
 #' @return Enrichment score list with cell type as names and enrichment score as
 #' values.
