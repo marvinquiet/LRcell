@@ -19,7 +19,6 @@ Depends:
 Imports:
     doSNOW,
     dplyr,
-    fgsea,
     foreach,
     ggplot2,
     ggrepel,
