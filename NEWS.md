@@ -1,4 +1,4 @@
 # LRcell 1.0.0
-
-## Major changes
-LRcell 1.0.0 version is released on 08-15-2020.
+- version 1.0.0 released
+- Submitted to Bioconductor
+---
