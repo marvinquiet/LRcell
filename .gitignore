@@ -48,3 +48,35 @@ vignettes/*.pdf
 
 # ignore all logs
 *.log
+
+# from https://www.bioconductor.org/developers/package-guidelines/#gitignore
+.renviron
+.rprofile
+.rproj
+.rproj.user
+.rhistory
+.rapp.history
+.o
+.sl
+.so
+.dylib
+.a
+.dll
+.def
+.ds_store
+unsrturl.bst
+.log
+.aux
+.backups
+.cproject
+.directory
+.dropbox
+.exrc
+.gdb.history
+.gitattributes
+.gitmodules
+.hgtags
+.project
+.seed
+.settings
+.tm_properties

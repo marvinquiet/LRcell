@@ -37,9 +37,17 @@ labels}
 \item{package.d}{Whether users are using package-provided marker genes to
 run LRcell analysis.}
 }
+\value{
+A dataframe of LRcell statistics as described in \code{\link{LRcell}}.
+}
 \description{
 This is a function which takes marker genes from single-cell RNA-seq as
 reference to calculate the enrichment of certain cell types in bulk DEG
 analysis. We assume that bulk DEG is derived from certain cell-type specific
 pattern.
+}
+\examples{
+data(mouse_FC_marker_genes)
+data(example_gene_pvals)
+res <- LRcellCore(example_gene_pvals, mouse_FC_marker_genes, method="LR", package.d=TRUE)
 }

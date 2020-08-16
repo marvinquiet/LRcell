@@ -3,7 +3,7 @@ Type: Package
 Title: Identification of cell-type enrichment in bulk RNA-seq datasets leveraging scRNA-seq marker genes information
 Version: 1.0.0
 Date: 2020-08-08
-Author: Wenjing Ma [aut]
+Authors@R: c(person("Wenjing", "Ma", email="wenjing.ma@emory.edu", role=c("cre", "aut")))
 Maintainer: Wenjing Ma <wenjing.ma@emory.edu>
 BugReports: https://github.com/marvinquiet/LRcell/issues
 GitURL: https://github.com/marvinquiet/LRcell
@@ -13,7 +13,6 @@ Description: This package leverages marker genes information from single-cell
     cell type(s) may be highly involved in the bulk experiments without deconvolution.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 biocViews: SingleCell, GeneSetEnrichment, Sequencing, Regression
 Depends:
     R (>= 3.6)

@@ -49,12 +49,12 @@
 #' data(example_gene_pvals)
 #' res <- LRcell(example_gene_pvals, species="mouse", region="FC")
 LRcell <- function(gene.p,
-                   marker.g = NULL,
-                   species = c("mouse", "human"),
-                   region = NULL,
-                   method = c("LR", "LiR"),
-                   min.size = 5,
-                   sig.cutoff = 0.05) {
+                marker.g = NULL,
+                species = c("mouse", "human"),
+                region = NULL,
+                method = c("LR", "LiR"),
+                min.size = 5,
+                sig.cutoff = 0.05) {
 
     species <- match.arg(species)
     method <- match.arg(method)
@@ -69,8 +69,7 @@ LRcell <- function(gene.p,
 
         # user does not provide region information
         if (is.null(region)) {
-            message("Because you did not choose a certain region, we will run all
-regions in this specie for you.
+            message("Because you did not choose a certain region, we will run all regions in this specie for you.
 It might take some time...")
             if (species == "mouse")
                 regions <- MOUSE_REGIONS
@@ -83,7 +82,8 @@ It might take some time...")
         for (reg in regions) {
             reg <- validate_region(species, reg)
 
-            marker_genes_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
+            marker_genes_url <-
+                "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
 
             # Github urls where enriched genes are stored
             enriched_genes_url <- paste0(marker_genes_url,
@@ -107,11 +107,11 @@ It might take some time...")
     for (item in names(sc_marker_genes_list)) {
         marker_genes <- sc_marker_genes_list[[item]]
         res <- LRcellCore(gene.p = gene.p,
-                           marker.g = marker_genes,
-                           method = method,
-                           min.size = min.size,
-                           sig.cutoff = sig.cutoff,
-                           package.d =  internal_data_ind)
+                        marker.g = marker_genes,
+                        method = method,
+                        min.size = min.size,
+                        sig.cutoff = sig.cutoff,
+                        package.d =  internal_data_ind)
         result_list[[item]] <- res
     }
     result_list
@@ -150,10 +150,17 @@ It might take some time...")
 #' @param package.d Whether users are using package-provided marker genes to
 #' run LRcell analysis.
 #'
+#' @return A dataframe of LRcell statistics as described in \code{\link{LRcell}}.
+#'
 #' @import stats
 #' @import utils
 #'
 #' @export
+#'
+#' @examples
+#' data(mouse_FC_marker_genes)
+#' data(example_gene_pvals)
+#' res <- LRcellCore(example_gene_pvals, mouse_FC_marker_genes, method="LR", package.d=TRUE)
 LRcellCore <- function(gene.p,
                        marker.g,
                        method,
@@ -233,9 +240,9 @@ LRcellCore <- function(gene.p,
             lir_df <- data.frame("y"=y, "x"=as.numeric(unname(gene_nlp)))
             # fit linear regression
             glm.lir <- stats::glm(y ~ x,
-                                  family = gaussian(link="identity"),
-                                  maxit = 100,
-                                  lir_df)
+                                family = gaussian(link="identity"),
+                                maxit = 100,
+                                lir_df)
             glm_res <- summary(glm.lir)
             coefs[idx] <- glm_res$coefficients["x","Estimate"]
             pvals[idx] <- glm_res$coefficients["x","Pr(>|t|)"]
@@ -249,15 +256,15 @@ LRcellCore <- function(gene.p,
         odds_increase <- log(0.5)-log(0.001)
         odds_ratio <- exp(odds_increase*coefs)
         res <- data.frame("ID"=ids, "genes_num"=genes_num,
-                          "coef"=coefs, "odds_ratio"=odds_ratio,
-                          "p-value"=pvals, "FDR"=BH_fdr,
-                          "lead_genes"=lead_genes)
+                        "coef"=coefs, "odds_ratio"=odds_ratio,
+                        "p-value"=pvals, "FDR"=BH_fdr,
+                        "lead_genes"=lead_genes)
     }
 
     if (method == "LiR") {
         res <- data.frame("ID"=ids, "genes_num"=genes_num,
-                          "coef"=coefs, "p-value"=pvals, "FDR"=BH_fdr,
-                          "lead_genes"=lead_genes)
+                        "coef"=coefs, "p-value"=pvals, "FDR"=BH_fdr,
+                        "lead_genes"=lead_genes)
     }
 
     # if users use provided data, then add cell type to the dataframe, otherwise
@@ -265,8 +272,13 @@ LRcellCore <- function(gene.p,
     if (package.d) {
         split_res <- strsplit(as.character(res$ID), "\\.")
         celltypes <- unlist(lapply(split_res, "[", 2))
-        res$cell_type <- unlist(lapply(lapply(strsplit(as.character(celltypes), "_"), head, -1),
-                                       paste, collapse="_"))
+        res$cell_type <- unlist(
+            lapply(
+                lapply(
+                    strsplit(as.character(celltypes), "_"),
+                head, -1),
+            paste, collapse="_")
+            )
     } else {
         res$cell_type <- res$ID
     }
@@ -300,7 +312,6 @@ LRcellCore <- function(gene.p,
 #' @import doSNOW
 #' @import foreach
 #'
-#'
 #' @export
 LRcell_gene_enriched_scores <- function(expr,
                                      annot,
@@ -331,16 +342,17 @@ LRcell_gene_enriched_scores <- function(expr,
         opts <- list(progress=progress)
 
         gene_enriched_list <- foreach::foreach(gene=rownames(expr),
-                                               .export = c("enrich_posfrac_score"),
-                                               .packages="Matrix",
-                                               .options.snow=opts) %dopar% {
+                                        .export = c("enrich_posfrac_score"),
+                                        .packages="Matrix",
+                                        .options.snow=opts) %dopar% {
             enrich_posfrac_score(expr[gene, ], annot, power=power)
         }
         parallel::stopCluster(cl)
     } else {
         for (i in seq_len(nrow(expr))) {
             gene <- rownames(expr)[i]
-            gene_enriched_list[[gene]] <- enrich_posfrac_score(expr[gene, ], annot, power=power)
+            gene_enriched_list[[gene]] <-
+                enrich_posfrac_score(expr[gene, ], annot, power=power)
             progress(i)
         }
     }

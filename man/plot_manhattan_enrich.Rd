@@ -21,3 +21,7 @@ A ggplot2 object
 This function draws out the LRcell result dataframe. In this function, we take
 LRcell result dataframe and added cell types according to
 }
+\examples{
+data(example_LRcell_res)
+plot_manhattan_enrich(example_LRcell_res)
+}

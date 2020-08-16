@@ -16,6 +16,15 @@ scores.}
 
 \item{topn}{Top N genes as marker genes.}
 }
+\value{
+A list of top marker genes.
+}
 \description{
 Get top marker genes for each subcluster
+}
+\examples{
+github_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
+enriched_genes_url <- paste0(github_url, "mouse/FCenriched_genes.RDS?raw=true")
+enriched_genes <- readRDS(url(enriched_genes_url))
+marker.g <- get_markergenes(enriched_genes, method="LR", topn=100)
 }
