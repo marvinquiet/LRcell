@@ -62,5 +62,5 @@ inputs of the marker gene file and brain region.
 }
 \examples{
 data(example_gene_pvals)
-res <- LRcell(example_gene_pvals, species="mouse", region="FC")
+res <- LRcell(example_gene_pvals, species="mouse", region="FC", method="LR")
 }

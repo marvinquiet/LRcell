@@ -47,7 +47,7 @@
 #' @export
 #' @examples
 #' data(example_gene_pvals)
-#' res <- LRcell(example_gene_pvals, species="mouse", region="FC")
+#' res <- LRcell(example_gene_pvals, species="mouse", region="FC", method="LR")
 LRcell <- function(gene.p,
                 marker.g = NULL,
                 species = c("mouse", "human"),
@@ -351,8 +351,7 @@ LRcell_gene_enriched_scores <- function(expr,
     } else {
         for (i in seq_len(nrow(expr))) {
             gene <- rownames(expr)[i]
-            gene_enriched_list[[gene]] <-
-                enrich_posfrac_score(expr[gene, ], annot, power=power)
+            gene_enriched_list[[gene]] <- enrich_posfrac_score(expr[gene, ], annot, power=power)
             progress(i)
         }
     }

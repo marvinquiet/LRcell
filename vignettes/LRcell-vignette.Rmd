@@ -1,10 +1,28 @@
 ---
-title: "LRcell-vignette"
-author: Wenjing Ma (wenjing.ma@emory.edu)
-date: 08-05-2020
-output: rmarkdown::html_vignette
+title: "LRcell: Identification of cell-type enrichment in bulk RNA-seq datasets leveraging scRNA-seq marker genes information"
+shorttitle: "LRcell Vignette"
+author: 
+- name: Wenjing Ma
+  affiliation: Computer Science and Informatics, Emory University 
+  email: wenjing.ma@emory.edu
+- name: Zhaohui Steve Qin
+  affiliation: Department of Biostatistics and Bioinformatics, Emory University 
+  email: zhaohui.qin@emory.edu
+date: "`r Sys.Date()`"
+package: LRcell
+abstract: >
+  This vignette introduces the use of LRcell, which is designed to use cell markers
+  acquired from single-cell RNA-sequecing (scRNA-seq) as information to identify 
+  certain cell types with the most transcriptional engagement in bulk experiments.
+  LRcell contains 3 major components: LRcell analysis, plot generation and marker
+  gene selection. All modules in this package are written in R. This package also 
+  provides marker genes in 1 human brain region (Prefrontal Cortex) and 9 mouse 
+  brain regions (Frontal Cortex, Cerebellum, Globus Pallidus, Hippocampus, 
+  Entopeduncular, Posterior Cortex, Striatum, Substantia Nigra and Thalamus).
+output:
+  BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{LRcell-vignette}
+  %\VignetteIndexEntry{LRcell Vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,6 +34,191 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Introduction
+Single-cell RNA-sequencing (scRNA-seq) technologies have revealed cell heterogeneity. 
+Marker gene expressions are considered as the most intuitive and informative measurements 
+distinguishing different cell types. Although several computational methods have 
+been proposed to do marker gene selection from clusters or cell types, none of them applied 
+marker gene information on bulk RNA-seq experiments to find cell type or cluster enrichment. 
+Here, we present LRcell package, which uses Logistic Regression or Linear Regression to
+identify the most transcriptionally enriched cell types or clusters when applying cell marker 
+information to a bulk experiment with p-values measurements of differentially expressed genes.
+
+**Pre-Loaded Marker genes information**: This package offers marker genes information in 1 human brain region
+and 9 mouse brain regions.
+
+# Standard Workflow
+
+## Installation
+
+The package can be installed by using `devtools`.
+```{r eval=FALSE}
+install.packages("devtools")
+
+library(devtools)
+devtools::install_github("marvinquiet/LRcell")
+```
+
+Or you can download the code from the Github repo, build and install package yourself as follows:
+```{bash eval=FALSE}
+git clone https://github.com/marvinquiet/LRcell.git
+R CMD BUILD --no-build-vignettes LRcell  
+R CMD INSTALL LRcell_1.0.0.tar.gz
+```
+
+To check whether LRcell package is successfully installed:
 ```{r setup}
-# library(LRcell)
+library(LRcell)
+```
+
+## LRcell usage
+Once we have LRcell package loaded, we can start using it to analyze the transcriptional
+engagement of cell types or clusters. LRcell **takes both single-cell marker genes list 
+and p-values of bulk DE genes as input** to calculate the enrichment of cell-type specific
+marker genes in the ranked DE genes. 
+
+As mentioned above, LRcell provides single-cell marker genes list in 1 human brain region
+(Prefrontal Cortex) and 9 mouse brain regions (Frontal Cortex, Cerebellum, Globus Pallidus, 
+Hippocampus, Entopeduncular, Posterior Cortex, Striatum, Substantia Nigra and Thalamus). 
+Users can either download the enriched data from Github repo and process them into 
+marker gene list or we can directly indicate which species and brain regions users 
+want to use as the input.
+
+### Directly indicate species and brain region in LRcell
+Compared to processing data yourself, a much easier way is to indicate species and brain regions. 
+In this way, marker genes will be downloaded and loaded for you. Say, we want to use mouse Frontal Cortex
+marker genes to do analysis on the example bulk experiment. (The example contains 23, 420 genes along with p-values calculated from 
+[DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html). 
+Data is processed from a mouse Alzheimer's disease model (GEO: [GSE90693](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90693)), 
+which is 6 months after treatment in Frontal Cortex brain region.)
+
+```{r example}
+# load example bulk data
+data("example_gene_pvals")
+head(example_gene_pvals, n=5)
+```
+
+Here, we use Linear Regression:
+```{r LRcell}
+res <- LRcell(gene.p = example_gene_pvals,
+              marker.g = NULL,
+              species = "mouse",
+              region = "FC",
+              method = "LiR")
+FC_res <- res$FC
+# exclude leading genes for a better view
+sub_FC_res <- subset(FC_res, select=-lead_genes)
+head(sub_FC_res)
+```
+
+Plot out the result:
+```{r plot_LRcell, fig.width=8, fig.height=6, dpi=120} 
+plot_manhattan_enrich(FC_res, sig.cutoff = .05, label.topn = 5)
+```
+
+According to the result, when using enrichment scores as a predictor variable in Linear Regression,
+one cluster of Astrocytes (FC_8-2.Asctrocytes_2) is the mostly enriched along with Microglia (FC_11-1.Microglia_1). 
+(Note that although cluster FC_11-4 was annotated as __unknown__ in the publication, according to our research,
+FC_11-* belong to Microglia/Macrophage cell types.) According to a recently published paper, some astrocytes 
+are disease-related.
+
+Recent publications have shown that Astrocytes are involved 
+in Alzheimer's Disease.
+
+### Marker gene download and do LRcell
+Marker gene list downloading example (mouse, Frontal Cortex, Logistic Regression):
+```{r download_marker}
+github_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
+enriched_genes_url <- paste0(github_url, "mouse/FCenriched_genes.RDS?raw=true")
+enriched_genes <- readRDS(url(enriched_genes_url))
+# get marker genes for LRcell in logistic regression
+FC_marker_genes <- get_markergenes(enriched_genes, method="LR", topn=100)
+
+# to have a glance of the marker gene list
+head(lapply(FC_marker_genes, head))
+```
+
+Then, we can run LRcell analysis by using `LRcellCore()` function using Logistic Regression.
+```{r LRcellCore}
+res <- LRcellCore(gene.p = example_gene_pvals,
+           marker.g = FC_marker_genes,
+           method = "LR", min.size = 5, 
+           sig.cutoff = 0.05, package.d = TRUE)
+head(subset(res, select=-lead_genes))
+```
+Here, `package.d` is an indicator showing whether users are using the LRcell-provided data. 
+If using your own data, you an set this indicator as `package.d=FALSE`.
+
+Plot out the result:
+```{r plot_LRcellCore, fig.width=8, fig.height=6,dpi=120} 
+plot_manhattan_enrich(res, sig.cutoff = .05, label.topn = 5)
+```
+
+We can clearly find that Microglia (FC_11-1.Microglia_1) is the most transcriptionally enriched 
+when using Logistic Regression analysis. The result is clear and sound because 
+proliferation and activation of Microglia in the brain is a known feature of
+Alzheimer's Disease (AD).
+
+## Calculate gene enrichment scores from expression dataframe
+LRcell also offers a function to calculate the enrichment scores of a read count expression matrix. 
+The calculation is based on this [science paper](https://science.sciencemag.org/content/352/6291/1326.long)
+which takes enrichment of genes in certain cell types and fraction of cells expressing the gene into 
+consideration. If interested, please take a look at the **Supplementary Materials** of the original paper.
+
+`LRcell_gene_enriched_scores()` function takes the gene-by-cell expression matrix and a cell-type annotation as input, 
+which means a clustering algorithm and/or cell-type annotations should be done first. The columns of the expression matrix
+should match with cell names in the annotation vector. 
+
+
+```{r echo=FALSE}
+# generate a simulated gene*cell read counts matrix
+n.row <- 3; n.col <- 10
+sim.expr <- matrix(0, nrow=n.row, ncol=n.col)
+rownames(sim.expr) <- paste0("gene", 1:n.row)
+colnames(sim.expr) <- paste0("cell", 1:n.col)
+
+# generate a simulated annotation for cells
+sim.annot <- c(rep("celltype1", 3), rep("celltype2", 3), rep("celltype3", 4))
+names(sim.annot) <- colnames(sim.expr)
+
+sim.expr['gene1', ] <- c(3, 0, 2, 8, 10, 6, 1, 0, 0, 2) # marker gene for celltype2
+sim.expr['gene2', ] <- c(7, 5, 8, 1, 0, 5, 2, 3, 2, 1) # marker gene for celltype1
+sim.expr['gene3', ] <- c(8, 10, 6, 7, 8, 9, 5, 8, 6, 8) # house keeping
+```
+
+
+Take a randomly-generated data as example.
+```{r example_expr}
+# print out the generated expression matrix
+print(sim.expr)
+
+
+# print out the cell-type annotation
+print(sim.annot)
+```
+
+This random example contains 3 genes and 10 cells. As you can tell from the matrix, __gene1__ is 
+a marker gene of __celltype2__; __gene2__ is a marker gene of __celltype1__; __gene3__ is a house keeping gene.
+
+
+```{r marker_gene_selection}
+# generating the enrichment score 
+enriched_res <- LRcell_gene_enriched_scores(expr = sim.expr,
+                            annot = sim.annot, parallel = FALSE)
+enriched_res
+```
+According to the result, it is a gene-by-celltype dataframe indicating the enrichment score of genes in different cell type.
+Since __gene2__ is a marker gene of __celltype1__, thus it has the highest enrichment score.
+
+When choosing marker genes using top 1 as threshold:
+```{r}
+marker_res <- get_markergenes(enriched.g = enriched_res,
+                method = "LR", topn=1)
+marker_res
+```
+
+
+# SessionInfo
+```{r session_info}
+sessionInfo()
 ```
