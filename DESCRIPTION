@@ -1,7 +1,7 @@
 Package: LRcell
 Type: Package
 Title: Identification of cell-type enrichment in bulk RNA-seq datasets leveraging scRNA-seq marker genes information
-Version: 1.0.0
+Version: 0.99.0
 Date: 2020-08-08
 Authors@R: c(person("Wenjing", "Ma", email="wenjing.ma@emory.edu", role=c("cre", "aut")))
 Maintainer: Wenjing Ma <wenjing.ma@emory.edu>
