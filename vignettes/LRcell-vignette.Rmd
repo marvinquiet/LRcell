@@ -5,9 +5,8 @@ author:
 - name: Wenjing Ma
   affiliation: Computer Science and Informatics, Emory University 
   email: wenjing.ma@emory.edu
-- name: Zhaohui Steve Qin
+- name: Dr. Zhaohui S. Qin
   affiliation: Department of Biostatistics and Bioinformatics, Emory University 
-  email: zhaohui.qin@emory.edu
 date: "`r Sys.Date()`"
 abstract: >
   The goal of LRcell is to identify specific sub-cell types that drives the changes 
