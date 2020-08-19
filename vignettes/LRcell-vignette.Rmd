@@ -1,5 +1,5 @@
 ---
-title: "LRcell: Differential **cell** type change analysis using Linear/Logistic Regression."
+title: "LRcell: Differential **cell** type change analysis using **L**inear/**L**ogistic **R**egression."
 shorttitle: "LRcell Vignette"
 author: 
 - name: Wenjing Ma
@@ -17,7 +17,7 @@ abstract: >
   differential expression p-values to calculate a cell-type significance p-value. 
   Finally, these p-values are compared to predict which one(s) are likely to be responsible 
   for the differential gene expression pattern observed in the bulk RNA-seq experiments. 
-  LRcell is inspired by the LRpath algorithm developed by Sartor et al., originally designed for 
+  LRcell is inspired by the LRpath[@sartor2009lrpath] algorithm developed by Sartor et al., originally designed for 
   pathway/gene set enrichment analysis. LRcell contains three major components: 
   LRcell analysis, plot generation and marker gene selection. All modules in this package are written in R. 
   This package also provides marker genes in the Prefrontal Cortex (pFC) human brain region and 
@@ -25,6 +25,7 @@ abstract: >
   Posterior Cortex, Striatum, Substantia Nigra and Thalamus).
 output:
   BiocStyle::html_document
+bibliography: library.bib
 vignette: >
   %\VignetteIndexEntry{LRcell Vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -84,6 +85,9 @@ marker genes in the ranked DE genes.
 As mentioned above, LRcell provides single-cell marker genes list in 1 human brain region
 (Prefrontal Cortex) and 9 mouse brain regions (Frontal Cortex, Cerebellum, Globus Pallidus, 
 Hippocampus, Entopeduncular, Posterior Cortex, Striatum, Substantia Nigra and Thalamus). 
+The data comes from mouse brain single-cell RNA-seq experiments[@saunders2018molecular]. 
+Another resource for this dataset is [DropViz](http://dropviz.org/).
+
 Users can either download the enriched data from Github repo and process them into 
 marker gene list or we can directly indicate which species and brain regions users 
 want to use as the input.
@@ -91,7 +95,7 @@ want to use as the input.
 ### Directly indicate species and brain region in LRcell
 Compared to processing data yourself, a much easier way is to indicate species and brain regions. 
 In this way, marker genes will be downloaded and loaded for you. Say, we want to use mouse Frontal Cortex
-marker genes to do analysis on the example bulk experiment. (The example contains 23, 420 genes along with p-values calculated from 
+marker genes to do analysis on the example bulk experiment[@swarup2019identification]. (The example contains 23, 420 genes along with p-values calculated from 
 [DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html). 
 Data is processed from a mouse Alzheimer's disease model (GEO: [GSE90693](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90693)), 
 which is 6 months after treatment in Frontal Cortex brain region.)
@@ -129,7 +133,7 @@ are disease-related.
 Recent publications have shown that Astrocytes are involved 
 in Alzheimer's Disease.
 
-### Marker gene download and do LRcell
+### Marker gene download and do LRcell analysis
 Marker gene list downloading example (mouse, Frontal Cortex, Logistic Regression):
 ```{r download_marker}
 github_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
