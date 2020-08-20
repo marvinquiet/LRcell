@@ -1,5 +1,5 @@
 ---
-title: "LRcell: Differential **cell** type change analysis using **L**inear/**L**ogistic **R**egression."
+title: "LRcell: Differential **cell** type change analysis using **L**ogistic/linear **R**egression."
 shorttitle: "LRcell Vignette"
 author: 
 - name: Wenjing Ma
@@ -85,7 +85,7 @@ marker genes in the ranked DE genes.
 As mentioned above, LRcell provides single-cell marker genes list in 1 human brain region
 (Prefrontal Cortex) and 9 mouse brain regions (Frontal Cortex, Cerebellum, Globus Pallidus, 
 Hippocampus, Entopeduncular, Posterior Cortex, Striatum, Substantia Nigra and Thalamus). 
-The data comes from mouse brain single-cell RNA-seq experiments[@saunders2018molecular]. 
+The human data comes from control samples in Major Depressive Disorder studies. [@nagy2020single]. The mouse data comes from the whole brain single-cell RNA-seq experiments[@saunders2018molecular]. 
 Another resource for this dataset is [DropViz](http://dropviz.org/).
 
 Users can either download the enriched data from Github repo and process them into 
@@ -169,7 +169,7 @@ Alzheimer's Disease (AD).
 
 ## Calculate gene enrichment scores from expression dataframe
 LRcell also offers a function to calculate the enrichment scores of a read count expression matrix. 
-The calculation is based on this [science paper](https://science.sciencemag.org/content/352/6291/1326.long)
+The calculation is based on algorithm proposed in [@marques2016oligodendrocyte], 
 which takes enrichment of genes in certain cell types and fraction of cells expressing the gene into 
 consideration. If interested, please take a look at the **Supplementary Materials** of the original paper.
 
@@ -205,7 +205,7 @@ print(sim.expr)
 print(sim.annot)
 ```
 
-This random example contains 3 genes and 10 cells. As you can tell from the matrix, __gene1__ is 
+This toy example contains 3 genes and 10 cells. As you can tell from the matrix, __gene1__ is 
 a marker gene of __celltype2__; __gene2__ is a marker gene of __celltype1__; __gene3__ is a house keeping gene.
 
 
