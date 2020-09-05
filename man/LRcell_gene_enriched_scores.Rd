@@ -4,13 +4,7 @@
 \alias{LRcell_gene_enriched_scores}
 \title{Find most enriched cell types in bulk DE genes by Logistic Regression}
 \usage{
-LRcell_gene_enriched_scores(
-  expr,
-  annot,
-  power = 1,
-  parallel = TRUE,
-  cores.n = NULL
-)
+LRcell_gene_enriched_scores(expr, annot, power = 1, parallel = TRUE)
 }
 \arguments{
 \item{expr}{Expression matrix with rows as genes and columns as cells, can be
@@ -22,8 +16,6 @@ values as cell types.}
 \item{power}{The penalty on fraction of cells expressing the genes.}
 
 \item{parallel}{Whether to run it in parallel.}
-
-\item{cores.n}{Number of cores to run parallel, i.e. 4.}
 }
 \value{
 Enrichment dataframe with rows as genes and columns as cell types,

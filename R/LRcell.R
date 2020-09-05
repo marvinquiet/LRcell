@@ -90,13 +90,22 @@ It might take some time...")
                                          paste0(species, '/', reg, 'enriched_genes.RDS'),
                                          "?raw=true")
 
-            #Remove later: not reading it from extdata anymore
-            # filepath <- system.file("extdata",
-            #                         paste0(species, '/', reg, 'enriched_genes.RDS'),
-            #                         package = "LRcell",
-            #                         mustWork = TRUE)
-            # enriched_genes <- readRDS(filepath)
-            enriched_genes <- readRDS(url(enriched_genes_url))
+            N.TRIES <- 3  # try 3 times, refer to http://bioconductor.org/developers/how-to/web-query/
+            while (N.TRIES > 0L) {
+                enriched_genes <- tryCatch(readRDS(url(enriched_genes_url)), error=identity)
+                if (!inherits(enriched_genes, "error"))
+                    break
+                N.TRIES <- N.TRIES - 1L
+            }
+
+            if (N.TRIES == 0L) {
+                stop("'getURL()' failed:",
+                     "\n  URL: ", enriched_genes_url,
+                     "\n  error: ", conditionMessage(enriched_genes),
+                     "\n Please check whether the Internect Connection is stable.")
+            }
+
+            # enriched_genes <- readRDS(url(enriched_genes_url))
             sc_marker_genes_list[[reg]] <- get_markergenes(enriched_genes, method)
         }
     } else {
@@ -304,20 +313,15 @@ LRcellCore <- function(gene.p,
 #'
 #' @param parallel Whether to run it in parallel.
 #'
-#' @param cores.n Number of cores to run parallel, i.e. 4.
-#'
 #' @return Enrichment dataframe with rows as genes and columns as cell types,
 #' values are enrichment scores.
 #'
-#' @import doSNOW
-#' @import foreach
-#'
+#' @import BiocParallel
 #' @export
 LRcell_gene_enriched_scores <- function(expr,
                                      annot,
                                      power=1,
-                                     parallel=TRUE,
-                                     cores.n=NULL) {
+                                     parallel=TRUE) {
     cat("Generate enrichment score for each gene..\n")
     gene_enriched_list <- NULL
 
@@ -328,34 +332,35 @@ LRcell_gene_enriched_scores <- function(expr,
     if(!all(sort(colnames(expr)) == sort(names(annot))))
         stop("Please check your provided cell type annotation is corresponding to the input expression dataframe.")
 
-    # progress bar
-    pb <- utils::txtProgressBar(max=nrow(expr), style=3)
-    progress <- function(n) utils::setTxtProgressBar(pb, n)
 
-    # do parallel
-    if (parallel) {
-        dcores <- parallel::detectCores()
-        ncores <- ifelse(is.null(cores.n), dcores, as.numeric(cores.n))
+    if (parallel) { # do parallel
+        BPPARAM <- BiocParallel::SnowParam(workers = 5,
+                                           tasks = 20,
+                                           progressbar = TRUE,
+                                           type = 'SOCK')
 
-        cl <- parallel::makeCluster(ncores)
-        doSNOW::registerDoSNOW(cl)
-        opts <- list(progress=progress)
+        gene_enriched_list <- BiocParallel::bplapply(rownames(expr),
+                                                     enrich_posfrac_score,
+                                                     expr,
+                                                     annot,
+                                                     power,
+                                                     BPPARAM = BPPARAM)
+    }
+    else { # or just for-loop
+        # set progress bar
+        pb <- utils::txtProgressBar(max=nrow(expr), style=3)
+        progress <- function(n) utils::setTxtProgressBar(pb, n)
 
-        gene_enriched_list <- foreach::foreach(gene=rownames(expr),
-                                        .export = c("enrich_posfrac_score"),
-                                        .packages="Matrix",
-                                        .options.snow=opts) %dopar% {
-            enrich_posfrac_score(expr[gene, ], annot, power=power)
-        }
-        parallel::stopCluster(cl)
-    } else {
         for (i in seq_len(nrow(expr))) {
             gene <- rownames(expr)[i]
-            gene_enriched_list[[gene]] <- enrich_posfrac_score(expr[gene, ], annot, power=power)
+            gene_enriched_list[[gene]] <- enrich_posfrac_score(gene,
+                                                               expr,
+                                                               annot,
+                                                               power=power)
             progress(i)
         }
+        close(pb)
     }
-    close(pb)
 
     cat("total gene number:", length(gene_enriched_list), '\n')
     enriched_genes <- do.call(rbind, gene_enriched_list)
@@ -371,7 +376,9 @@ LRcell_gene_enriched_scores <- function(expr,
 #'
 #' @name enrich_posfrac_score
 #'
-#' @param gene.expr A vector represents expression level for a specific gene.
+#' @param gene Gene name from the expression matrix.
+#'
+#' @param expr Complete expression matrix with rows as genes and columns as cells.
 #'
 #' @param annot Cell type annotation named vector with names as cell ids and
 #' values as cell types.
@@ -380,7 +387,8 @@ LRcell_gene_enriched_scores <- function(expr,
 #'
 #' @return Enrichment score list with cell type as names and enrichment score as
 #' values.
-enrich_posfrac_score <- function(gene.expr, annot, power=1) {
+enrich_posfrac_score <- function(gene, expr, annot, power=1) {
+    gene.expr <- expr[gene, ]
     score_list <- list()
     for (celltype in unique(annot)) {
         cells <- names(annot[annot == celltype])

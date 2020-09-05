@@ -1,6 +1,6 @@
 Package: LRcell
 Type: Package
-Title: Differential cell type change analysis using Logistic/linear Regression.
+Title: Differential cell type change analysis using Logistic/linear Regression
 Version: 0.99.0
 Date: 2020-08-08
 Authors@R: person("Wenjing", "Ma", 
@@ -27,18 +27,17 @@ Description: The goal of LRcell is to identify specific sub-cell types that driv
   Posterior Cortex, Striatum, Substantia Nigra and Thalamus).
 License: MIT + file LICENSE
 Encoding: UTF-8
-biocViews: SingleCell, GeneSetEnrichment, Sequencing, Regression
+biocViews: SingleCell, GeneSetEnrichment, Sequencing, Regression, GeneExpression, DifferentialExpression
 Depends:
+    R (>= 3.6)
 Imports:
+    BiocParallel,
     dplyr,
     ggplot2,
     ggrepel,
     magrittr,
     stats,
     utils
-Enhances:
-    doSNOW,
-    foreach
 RoxygenNote: 7.1.1
 Suggests:
     BiocStyle,

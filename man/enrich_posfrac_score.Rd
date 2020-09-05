@@ -4,10 +4,12 @@
 \alias{enrich_posfrac_score}
 \title{Calculate enrichment scores for each cell type in a specific gene.}
 \usage{
-enrich_posfrac_score(gene.expr, annot, power = 1)
+enrich_posfrac_score(gene, expr, annot, power = 1)
 }
 \arguments{
-\item{gene.expr}{A vector represents expression level for a specific gene.}
+\item{gene}{Gene name from the expression matrix.}
+
+\item{expr}{Complete expression matrix with rows as genes and columns as cells.}
 
 \item{annot}{Cell type annotation named vector with names as cell ids and
 values as cell types.}
