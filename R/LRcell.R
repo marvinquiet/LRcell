@@ -229,7 +229,7 @@ LRcellCore <- function(gene.p,
         sig_DE_genes <- intersect(marker_genes, sig_genes)
         lead_genes[idx]<-paste(sig_DE_genes[order(sig_DE_genes)],collapse=", ")
 
-        y <- rep(0, length(gene.p))
+        y <- rep(0, length(gene_nlp))
         if (method == "LR") {
             y[matched_idx] <- 1
             lr_df <- data.frame("y"=as.numeric(y), "x"=as.numeric(unname(gene_nlp)))
@@ -313,6 +313,8 @@ LRcellCore <- function(gene.p,
 #'
 #' @param parallel Whether to run it in parallel.
 #'
+#' @param n.cores How many cores to use in parallel mode.
+#'
 #' @return Enrichment dataframe with rows as genes and columns as cell types,
 #' values are enrichment scores.
 #'
@@ -321,7 +323,8 @@ LRcellCore <- function(gene.p,
 LRcell_gene_enriched_scores <- function(expr,
                                      annot,
                                      power=1,
-                                     parallel=TRUE) {
+                                     parallel=TRUE,
+                                     n.cores=4) {
     cat("Generate enrichment score for each gene..\n")
     gene_enriched_list <- NULL
 
@@ -334,8 +337,7 @@ LRcell_gene_enriched_scores <- function(expr,
 
 
     if (parallel) { # do parallel
-        BPPARAM <- BiocParallel::SnowParam(workers = 5,
-                                           tasks = 20,
+        BPPARAM <- BiocParallel::SnowParam(workers = n.cores,
                                            progressbar = TRUE,
                                            type = 'SOCK')
 
