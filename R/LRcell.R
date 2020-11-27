@@ -216,9 +216,9 @@ LRcellCore <- function(gene.p,
             dedup_marker_genes <- tapply(marker_genes, names(marker_genes), mean)
             marker_genes <- names(dedup_marker_genes)
         }
-        matched_idx <- match(marker_genes, as.vector(names(gene.p), mode="character"))
+        matched_idx <- match(marker_genes, as.vector(names(gene_nlp), mode="character"))
         matched_idx <- matched_idx[!is.na(matched_idx)]
-        matched_genes <- as.vector(names(gene.p), mode="character")[matched_idx]
+        matched_genes <- as.vector(names(gene_nlp), mode="character")[matched_idx]
 
         if (length(matched_genes) < min.size) next
 
