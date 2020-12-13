@@ -11,10 +11,10 @@ A named vector with 81 subclusters in mouse Frontal Cortex:
 }
 }
 \source{
-\url{https://github.com/marvinquiet/LRcell/tree/master/marker_genes_lib}
+Caculated from gene enrichment scores
 }
 \usage{
-mouse_FC_marker_genes
+data(mouse_FC_marker_genes)
 }
 \description{
 A list of marker genes with names indicating cell types. We selected top 100

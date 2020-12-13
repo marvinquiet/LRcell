@@ -23,8 +23,10 @@ A list of top marker genes.
 Get top marker genes for each subcluster
 }
 \examples{
-github_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
-enriched_genes_url <- paste0(github_url, "mouse/FCenriched_genes.RDS?raw=true")
-enriched_genes <- readRDS(url(enriched_genes_url))
+library(ExperimentHub)
+eh <- ExperimentHub::ExperimentHub()
+eh <- query(eh, "LRcellTypeMarkers")
+# eh$title
+enriched_genes <- eh[['EH4548']]
 marker.g <- get_markergenes(enriched_genes, method="LR", topn=100)
 }

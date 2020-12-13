@@ -20,7 +20,7 @@ A data frame with 81 rows as mouse FC sub-clusters and 8 variables:
 }
 }
 \usage{
-example_LRcell_res
+data(example_LRcell_res)
 }
 \description{
 An example output of LRcell using data \link{example_gene_pvals} and

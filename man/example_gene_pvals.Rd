@@ -12,7 +12,7 @@ A named vector with 23,420 items
 `GSE90693_RawCountsData_TPR50_6months_AllRegions.txt.gz`
 }
 \usage{
-example_gene_pvals
+data(example_gene_pvals)
 }
 \description{
 A named vector containing gene symbols as name and p-values as values. This

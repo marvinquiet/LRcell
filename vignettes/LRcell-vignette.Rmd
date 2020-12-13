@@ -131,9 +131,10 @@ in Alzheimer's Disease.
 ### Marker gene download and do LRcell analysis
 Marker gene list downloading example (mouse, Frontal Cortex, Logistic Regression):
 ```{r download_marker}
-github_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
-enriched_genes_url <- paste0(github_url, "mouse/FCenriched_genes.RDS?raw=true")
-enriched_genes <- readRDS(url(enriched_genes_url))
+library(ExperimentHub)
+eh <- ExperimentHub::ExperimentHub()  ## use ExperimentHub to download data
+eh <- query(eh, "LRcellTypeMarkers")
+enriched_genes <- eh[["EH4548"]]  # use title ID which indicates FC region
 # get marker genes for LRcell in logistic regression
 FC_marker_genes <- get_markergenes(enriched_genes, method="LR", topn=100)
 

@@ -14,7 +14,7 @@ A named vector with 565 subclusters:
 \url{http://dropviz.org/} under tab `data`
 }
 \usage{
-mouse_celltypes
+data(mouse_celltypes)
 }
 \description{
 A named vector containing the subclusters as name and cell types as values

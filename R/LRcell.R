@@ -44,6 +44,9 @@
 #'  \item lead_genes Genes that are contributing to the analysis;
 #'}
 #'
+#' @import ExperimentHub
+#' @import AnnotationHub
+#'
 #' @export
 #' @examples
 #' data(example_gene_pvals)
@@ -82,30 +85,40 @@ It might take some time...")
         for (reg in regions) {
             reg <- validate_region(species, reg)
 
-            marker_genes_url <-
-                "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
-
+            ## Use URL to acquire data, maybe needed in future if FTP server is ready
+            # marker_genes_url <-
+            #     "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
             # Github urls where enriched genes are stored
-            enriched_genes_url <- paste0(marker_genes_url,
-                                         paste0(species, '/', reg, 'enriched_genes.RDS'),
-                                         "?raw=true")
+            # enriched_genes_url <- paste0(marker_genes_url,
+            #                              paste0(species, '/', reg, 'enriched_genes.RDS'),
+            #                              "?raw=true")
+            #
+            # N.TRIES <- 3  # try 3 times, refer to http://bioconductor.org/developers/how-to/web-query/
+            # while (N.TRIES > 0L) {
+            #     enriched_genes <- tryCatch(readRDS(url(enriched_genes_url)), error=identity)
+            #     if (!inherits(enriched_genes, "error"))
+            #         break
+            #     N.TRIES <- N.TRIES - 1L
+            # }
+            #
+            # if (N.TRIES == 0L) {
+            #     stop("'getURL()' failed:",
+            #          "\n  URL: ", enriched_genes_url,
+            #          "\n  error: ", conditionMessage(enriched_genes),
+            #          "\n Please check whether the Internect Connection is stable.")
+            # }
 
-            N.TRIES <- 3  # try 3 times, refer to http://bioconductor.org/developers/how-to/web-query/
-            while (N.TRIES > 0L) {
-                enriched_genes <- tryCatch(readRDS(url(enriched_genes_url)), error=identity)
-                if (!inherits(enriched_genes, "error"))
-                    break
-                N.TRIES <- N.TRIES - 1L
+            ## Use ExperimentHub to download data
+            eh <- ExperimentHub::ExperimentHub()
+            eh <- AnnotationHub::query(eh, "LRcellTypeMarkers")  ## query the data in AnnotationHub
+
+            if (species == "mouse") {
+                enriched_genes <- eh[[MOUSE_EXPHUB_MAPPING[reg]]]
             }
 
-            if (N.TRIES == 0L) {
-                stop("'getURL()' failed:",
-                     "\n  URL: ", enriched_genes_url,
-                     "\n  error: ", conditionMessage(enriched_genes),
-                     "\n Please check whether the Internect Connection is stable.")
+            if (species == "human") {
+                enriched_genes <- eh[[HUMAN_EXPHUB_MAPPING[reg]]]
             }
-
-            # enriched_genes <- readRDS(url(enriched_genes_url))
             sc_marker_genes_list[[reg]] <- get_markergenes(enriched_genes, method)
         }
     } else {

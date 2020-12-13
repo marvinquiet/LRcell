@@ -1,6 +1,20 @@
 #' mouse/human brain regions provided by LRcell package
+#' @noRd
 MOUSE_REGIONS <- c("TH", "STR", "SN", "PC", "HC", "GP", "FC", "ENT", "CB")
 HUMAN_REGIONS <- c("pFC")
+
+# Mapping data to ExperimentHub EH id
+MOUSE_EXPHUB_MAPPING <- c("FC"="EH4548",
+                    "CB"="EH4549",
+                    "ENT"="EH4550",
+                    "GP"="EH4551",
+                    "PC"="EH4552",
+                    "STR"="EH4553",
+                    "SN"="EH4554",
+                    "TH"="EH4555",
+                    "HC"="EH4556")
+HUMAN_EXPHUB_MAPPING <- c("pFC"="EH4557")
+
 
 #' Whether the input data is a named numeric vector
 #' @noRd
@@ -43,9 +57,11 @@ validate_region <- function(species, region) {
 #' @export
 #'
 #' @examples
-#' github_url <- "https://github.com/marvinquiet/LRcell/blob/master/marker_genes_lib/"
-#' enriched_genes_url <- paste0(github_url, "mouse/FCenriched_genes.RDS?raw=true")
-#' enriched_genes <- readRDS(url(enriched_genes_url))
+#' library(ExperimentHub)
+#' eh <- ExperimentHub::ExperimentHub()
+#' eh <- query(eh, "LRcellTypeMarkers")
+#' # eh$title
+#' enriched_genes <- eh[['EH4548']]
 #' marker.g <- get_markergenes(enriched_genes, method="LR", topn=100)
 get_markergenes <- function(enriched.g, method=c("LR", "LiR"), topn=100) {
     method <- match.arg(method)

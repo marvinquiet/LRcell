@@ -62,3 +62,54 @@ plot_manhattan_enrich <- function(lrcell_res,
 }
 
 
+#' Plot marker genes distribution on DE gene rank
+#'
+#' This function draws out the marker gene distribution for a certain cell type
+#' (or cluster) on the DE gene rank list.
+#'
+#' @name plot_marker_dist
+#'
+#' @param markers Vector of marker genes from a cell type or cluster of interest.
+#'
+#' @param gene.p Named vector of gene-level pvalues from DEG analysis, i.e.
+#' DESeq2, LIMMA
+#'
+#' @param colour Users can define the bar color they want on the ggplot2 object.
+#'
+#' @return A ggplot2 object
+#'
+#' @import ggplot2
+#'
+#' @export
+#'
+#' @examples
+#' data(example_gene_pvals)
+#' data(mouse_FC_marker_genes)
+#' Oligos_markers <- mouse_FC_marker_genes[["FC_9-5.Oligodendrocytes_5"]]
+#' plot_marker_dist(Oligos_markers, example_gene_pvals)
+plot_marker_dist <- function(markers,
+                            gene.p,
+                            colour="red") {
+    gene.p <- sort(gene.p)
+    ticks <- match(markers, names(gene.p))
+    ticks <- ticks[!is.na(ticks)]
+    ticks_df <- data.frame(x=ticks)
+
+    g <- ggplot2::ggplot() +
+        ggplot2::geom_hline(yintercept = 0, colour="black") +
+        ggplot2::geom_segment(data=ticks_df,
+                              mapping=aes(x=.data$x, xend=.data$x, y=-0.5, yend=0.5),
+                              size=0.3, colour = colour) +
+        ggplot2::xlim(c(0, length(gene.p))) + ggplot2::ylim(c(-1, 1)) +
+        ggplot2::labs(x = "Bulk DE Genes Ranking", y = "Indicator Bar Height",
+             title="Marker Gene Distribution on DE genes") +
+        ## add themes
+        ggplot2::theme_bw() +
+        ggplot2::theme(
+            axis.text.x = element_text(face = "bold", size = 12, hjust = 1),
+            panel.grid.minor.x = element_blank()
+        )
+    g
+}
+
+

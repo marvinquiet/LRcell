@@ -7,7 +7,6 @@ Authors@R: person("Wenjing", "Ma",
          email="wenjing.ma@emory.edu", 
          role=c("cre", "aut"),
          comment = c(ORCID = "0000-0001-8757-651X"))
-Maintainer: Wenjing Ma <wenjing.ma@emory.edu>
 BugReports: https://github.com/marvinquiet/LRcell/issues
 GitURL: https://github.com/marvinquiet/LRcell
 Description: The goal of LRcell is to identify specific sub-cell types that drives the changes 
@@ -29,7 +28,9 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 biocViews: SingleCell, GeneSetEnrichment, Sequencing, Regression, GeneExpression, DifferentialExpression
 Depends:
-    R (>= 3.6)
+    R (>= 4.1),
+    ExperimentHub,
+    AnnotationHub
 Imports:
     BiocParallel,
     dplyr,

@@ -10,6 +10,8 @@
 #'     Named vector with name as subclusters and values as cell types.
 #' }
 #' @source \url{http://dropviz.org/} under tab `data`
+#' @usage data(mouse_celltypes)
+#'
 "mouse_celltypes"
 
 #' Example gene_pvals named vector from mouse experiment.
@@ -23,6 +25,8 @@
 #'
 #' @source  \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE90693}
 #' `GSE90693_RawCountsData_TPR50_6months_AllRegions.txt.gz`
+#' @usage data(example_gene_pvals)
+#'
 "example_gene_pvals"
 
 #' Example marker genes from mouse FC brain region.
@@ -34,7 +38,9 @@
 #' \describe{
 #'     Named vector with name as subclusters and values as marker genes.
 #' }
-#' @source \url{https://github.com/marvinquiet/LRcell/tree/master/marker_genes_lib}
+#' @source Caculated from gene enrichment scores
+#'
+#' @usage data(mouse_FC_marker_genes)
 "mouse_FC_marker_genes"
 
 
@@ -54,4 +60,5 @@
 #'     \item{cell_type}{Cell typ ename}
 #' }
 #'
+#'@usage data(example_LRcell_res)
 "example_LRcell_res"
