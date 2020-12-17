@@ -7,3 +7,8 @@
 - remove the LRcell.Rproj
 - change the .gitignore file
 ---
+
+# LRcell 0.99.2
+- change LRcellTypeMarkers dependency to R>=3.6
+- change LRcell dependency to R>=3.6
+---
