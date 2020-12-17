@@ -28,7 +28,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 biocViews: SingleCell, GeneSetEnrichment, Sequencing, Regression, GeneExpression, DifferentialExpression
 Depends:
-    R (>= 4.1),
+    R (>= 3.6),
     ExperimentHub,
     AnnotationHub
 Imports:
