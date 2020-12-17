@@ -1,7 +1,7 @@
 Package: LRcell
 Type: Package
 Title: Differential cell type change analysis using Logistic/linear Regression
-Version: 0.99.0
+Version: 0.99.1
 Date: 2020-08-08
 Authors@R: person("Wenjing", "Ma", 
          email="wenjing.ma@emory.edu", 
