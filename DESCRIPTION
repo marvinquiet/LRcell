@@ -1,7 +1,7 @@
 Package: LRcell
 Type: Package
 Title: Differential cell type change analysis using Logistic/linear Regression
-Version: 0.99.2
+Version: 0.99.3
 Date: 2020-08-08
 Authors@R: person("Wenjing", "Ma", 
          email="wenjing.ma@emory.edu", 
@@ -28,7 +28,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 biocViews: SingleCell, GeneSetEnrichment, Sequencing, Regression, GeneExpression, DifferentialExpression
 Depends:
-    R (>= 3.6),
+    R (>= 4.1),
     ExperimentHub,
     AnnotationHub
 Imports:
