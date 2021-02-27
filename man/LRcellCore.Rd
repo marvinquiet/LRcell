@@ -4,14 +4,7 @@
 \alias{LRcellCore}
 \title{Find most enriched cell types in bulk DE genes by Logistic Regression}
 \usage{
-LRcellCore(
-  gene.p,
-  marker.g,
-  method,
-  min.size = 5,
-  sig.cutoff = 0.05,
-  package.d = FALSE
-)
+LRcellCore(gene.p, marker.g, method, min.size = 5, sig.cutoff = 0.05)
 }
 \arguments{
 \item{gene.p}{Named vector of gene-level pvalues from DEG analysis, i.e.
@@ -33,9 +26,6 @@ regression can be performed, default: LR.}
 labels}
 
 \item{sig.cutoff}{Cutoff for input genes' pvalues, default: 0.05.}
-
-\item{package.d}{Whether users are using package-provided marker genes to
-run LRcell analysis.}
 }
 \value{
 A dataframe of LRcell statistics as described in \code{\link{LRcell}}.
@@ -49,5 +39,5 @@ pattern.
 \examples{
 data(mouse_FC_marker_genes)
 data(example_gene_pvals)
-res <- LRcellCore(example_gene_pvals, mouse_FC_marker_genes, method="LR", package.d=TRUE)
+res <- LRcellCore(example_gene_pvals, mouse_FC_marker_genes, method="LR")
 }

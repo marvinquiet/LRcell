@@ -1,8 +1,8 @@
 Package: LRcell
 Type: Package
 Title: Differential cell type change analysis using Logistic/linear Regression
-Version: 0.99.3
-Date: 2020-08-08
+Version: 0.99.4
+Date: 2021-02-25
 Authors@R: person("Wenjing", "Ma", 
          email="wenjing.ma@emory.edu", 
          role=c("cre", "aut"),
@@ -21,7 +21,7 @@ Description: The goal of LRcell is to identify specific sub-cell types that driv
   originally designed for pathway/gene set enrichment analysis. LRcell contains three major 
   components: LRcell analysis, plot generation and marker gene selection. 
   All modules in this package are written in R. This package also provides marker 
-  genes in the Prefrontal Cortex (pFC) human brain region and nine mouse brain 
+  genes in the Prefrontal Cortex (pFC) human brain region, human PBMC and nine mouse brain 
   regions (Frontal Cortex, Cerebellum, Globus Pallidus, Hippocampus, Entopeduncular, 
   Posterior Cortex, Striatum, Substantia Nigra and Thalamus).
 License: MIT + file LICENSE
@@ -41,6 +41,7 @@ Imports:
     utils
 RoxygenNote: 7.1.1
 Suggests:
+    LRcellTypeMarkers,
     BiocStyle,
     knitr,
     rmarkdown,

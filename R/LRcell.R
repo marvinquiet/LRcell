@@ -18,7 +18,7 @@
 #'
 #' @param region Specific brain regions provided by LRcell. For mouse, LRcell
 #' provides 9 brain regions: c("FC", "HC", "PC", "GP", "STR", "TH", "SN", "ENT",
-#' "CB"). For human, LRcell provides c("pFC")
+#' "CB"). For human, LRcell provides c("pFC", "PBMC")
 #'
 #' @param method Either `logistic regression` or `linear regression`. Logistic
 #' regression equally treats cell-type specific marker genes, however, if
@@ -72,7 +72,7 @@ LRcell <- function(gene.p,
 
         # user does not provide region information
         if (is.null(region)) {
-            message("Because you did not choose a certain region, we will run all regions in this specie for you.
+            message("Because you did not choose a certain region, we will run all regions in this species for you.
 It might take some time...")
             if (species == "mouse")
                 regions <- MOUSE_REGIONS
@@ -132,8 +132,30 @@ It might take some time...")
                         marker.g = marker_genes,
                         method = method,
                         min.size = min.size,
-                        sig.cutoff = sig.cutoff,
-                        package.d =  internal_data_ind)
+                        sig.cutoff = sig.cutoff)
+        # if users use provided data, then add cell type to the dataframe, otherwise
+        # LRcell uses ID as cell type
+        if (internal_data_ind) {
+            if (item %in% MOUSE_REGIONS) {
+                ## set cell types for mouse brain data
+                split_res <- strsplit(as.character(res$ID), "\\.")
+                celltypes <- unlist(lapply(split_res, "[", 2))
+                res$cell_type <- celltypes
+            } else if ("pFC" == item) {
+                ## set cell types for human pFC data
+                split_res <- strsplit(as.character(res$ID), "_")
+                celltypes <- unlist(lapply(split_res, "[", 1))
+                res$cell_type <- celltypes
+            } else if ("PBMC" == item) {
+                ## set cell types for human PBMC data
+                split_res <- strsplit(as.character(res$ID), "_")
+                celltypes <- unlist(lapply(split_res, "[", 1))
+                res$cell_type <- celltypes
+            }
+        } else {
+            res$cell_type <- res$ID
+        }
+
         result_list[[item]] <- res
     }
     result_list
@@ -169,9 +191,6 @@ It might take some time...")
 #'
 #' @param sig.cutoff Cutoff for input genes' pvalues, default: 0.05.
 #'
-#' @param package.d Whether users are using package-provided marker genes to
-#' run LRcell analysis.
-#'
 #' @return A dataframe of LRcell statistics as described in \code{\link{LRcell}}.
 #'
 #' @import stats
@@ -182,12 +201,11 @@ It might take some time...")
 #' @examples
 #' data(mouse_FC_marker_genes)
 #' data(example_gene_pvals)
-#' res <- LRcellCore(example_gene_pvals, mouse_FC_marker_genes, method="LR", package.d=TRUE)
+#' res <- LRcellCore(example_gene_pvals, mouse_FC_marker_genes, method="LR")
 LRcellCore <- function(gene.p,
                        marker.g,
                        method,
-                       min.size = 5, sig.cutoff = 0.05,
-                       package.d = FALSE) {
+                       min.size = 5, sig.cutoff = 0.05) {
 
     if (typeof(marker.g) != "list")
         stop("Please make sure marker genes is a list with names indicating cell types or clusters.")
@@ -288,22 +306,6 @@ LRcellCore <- function(gene.p,
                         "coef"=coefs, "p-value"=pvals, "FDR"=BH_fdr,
                         "lead_genes"=lead_genes)
     }
-
-    # if users use provided data, then add cell type to the dataframe, otherwise
-    # LRcell uses ID as cell type
-    if (package.d) {
-        split_res <- strsplit(as.character(res$ID), "\\.")
-        celltypes <- unlist(lapply(split_res, "[", 2))
-        res$cell_type <- unlist(
-            lapply(
-                lapply(
-                    strsplit(as.character(celltypes), "_"),
-                head, -1),
-            paste, collapse="_")
-            )
-    } else {
-        res$cell_type <- res$ID
-    }
     res
 }
 
@@ -328,8 +330,8 @@ LRcellCore <- function(gene.p,
 #'
 #' @param n.cores How many cores to use in parallel mode.
 #'
-#' @return Enrichment dataframe with rows as genes and columns as cell types,
-#' values are enrichment scores.
+#' @return A numeric matrix with rows as genes and columns as cell types,
+#' values are gene enrichment scores.
 #'
 #' @import BiocParallel
 #' @export
@@ -380,7 +382,10 @@ LRcell_gene_enriched_scores <- function(expr,
     cat("total gene number:", length(gene_enriched_list), '\n')
     enriched_genes <- do.call(rbind, gene_enriched_list)
     rownames(enriched_genes) <- rownames(expr)
-    enriched_genes
+
+    ## convert enriched gene scores dataframe into matrix
+    numeric_enriched_genes <- apply(enriched_genes, c(1, 2), as.numeric)
+    numeric_enriched_genes
 }
 
 

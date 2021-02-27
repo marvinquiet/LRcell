@@ -26,8 +26,8 @@ values as cell types.}
 \item{n.cores}{How many cores to use in parallel mode.}
 }
 \value{
-Enrichment dataframe with rows as genes and columns as cell types,
-values are enrichment scores.
+A numeric matrix with rows as genes and columns as cell types,
+values are gene enrichment scores.
 }
 \description{
 This is a function which takes marker genes from single-cell RNA-seq as

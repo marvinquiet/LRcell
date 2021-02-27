@@ -29,7 +29,7 @@ default: NULL}
 
 \item{region}{Specific brain regions provided by LRcell. For mouse, LRcell
 provides 9 brain regions: c("FC", "HC", "PC", "GP", "STR", "TH", "SN", "ENT",
-"CB"). For human, LRcell provides c("pFC")}
+"CB"). For human, LRcell provides c("pFC", "PBMC")}
 
 \item{method}{Either `logistic regression` or `linear regression`. Logistic
 regression equally treats cell-type specific marker genes, however, if
