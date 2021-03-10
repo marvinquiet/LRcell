@@ -13,7 +13,7 @@ MOUSE_EXPHUB_MAPPING <- c("FC"="EH4548",
                     "SN"="EH4554",
                     "TH"="EH4555",
                     "HC"="EH4556")
-HUMAN_EXPHUB_MAPPING <- c("pFC"="EH4557", "PBMC"=NA)  ## will update once uploaded to experimentHub
+HUMAN_EXPHUB_MAPPING <- c("pFC"="EH4557", "PBMC"="EH5420")
 
 
 #' Whether the input data is a named numeric vector

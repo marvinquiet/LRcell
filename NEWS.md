@@ -1,3 +1,6 @@
+# LRcell 0.99.5
+- Add PBMC dataset from ExperimentHub
+
 # LRcell 0.99.4
 - Debug test-LRcell.R and fix the problem due to the data uploaded
 - Add PBMC datasets information in utils.R
