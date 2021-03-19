@@ -26,18 +26,11 @@ a [whole mouse brain analysis](https://www.sciencedirect.com/science/article/pii
 
 ### Installation
 
-The package can be installed by using `devtools`.
+This is a R Bioconductor package and it can be installed by using `BiocManger`.
 ```{r}
-install.packages("devtools")
-
-library(devtools)
-devtools::install_github("marvinquiet/LRcell")
-```
-Or you can download the code from the Github repo, build and install package yourself as follows:
-```{bash}
-git clone https://github.com/marvinquiet/LRcell.git
-R CMD BUILD --no-build-vignettes LRcell  
-R CMD INSTALL LRcell_xxx.tar.gz
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager") ## this will install the BiocManager package
+BiocManager::install("LRcell")
 ```
 
 To check whether LRcell package is successfully installed:
