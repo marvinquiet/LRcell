@@ -1,3 +1,6 @@
+# LRcell 0.99.6
+- Edit Vignette
+
 # LRcell 0.99.5
 - Add PBMC dataset from ExperimentHub
 
