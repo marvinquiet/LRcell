@@ -1,3 +1,6 @@
+# LRcell 0.99.7
+- Fix typo
+
 # LRcell 0.99.6
 - Edit Vignette
 

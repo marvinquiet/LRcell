@@ -26,7 +26,7 @@ a [whole mouse brain analysis](https://www.sciencedirect.com/science/article/pii
 
 ### Installation
 
-This is a R Bioconductor package and it can be installed by using `BiocManger`.
+This is a R Bioconductor package and it can be installed by using `BiocManager`.
 ```{r}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager") ## this will install the BiocManager package
