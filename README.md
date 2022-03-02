@@ -1,6 +1,6 @@
 # LRcell tutorial
 
-**Package version**: 0.99.5
+**Package version**: 1.0.0
 
 
 ## Introduction
