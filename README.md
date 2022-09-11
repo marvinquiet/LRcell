@@ -2,6 +2,8 @@
 
 **Package version**: 1.0.0
 
+Our paper is now on Briefings in Bioinformatics [here](https://doi.org/10.1093/bib/bbac063).
+
 
 ## Introduction
 The goal of LRcell is to identify specific sub-cell types that drives the changes 
